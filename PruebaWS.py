@@ -9,7 +9,7 @@ class Testscraper(unittest.TestCase):
 
 
     def test_scraper(self):
-        self.assertIsNone(self.m.main(self,"https://stackoverflow.com/questions/89228/calling-an-external-command-in-python?rq=1"))
+        self.assertIsNone(self.m.main(self,"https://stackoverflow.com/questions/16840409/how-to-list-containers-in-docker"))
 
 
 
