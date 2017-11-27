@@ -30,8 +30,11 @@ class Option():
 
 class Main:
 
-    def main():
-        print('#'*80)
+    def main(self,url):
+        #~ url = "https://stackoverflow.com/questions/16840409/how-to-list-containers-in-docker"
+        set = SetAll(url)
+        set.set_all()
+        '''print('#'*80)
         o = Option()
         o.option()
         while True:
@@ -67,7 +70,7 @@ class Main:
                     print('Comando desconocido: {}'.format(cmd))
 
             except:
-                a = 0
+                a = 0'''
 
 
 
