@@ -31,7 +31,6 @@ class Option():
 class Main:
 
     def main(self,url):
-        #~ url = "https://stackoverflow.com/questions/16840409/how-to-list-containers-in-docker"
         set = SetAll(url)
         set.set_all()
         '''print('#'*80)
