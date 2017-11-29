@@ -11,6 +11,9 @@ class PruebaWebScraper(unittest.TestCase):
 
     def setUp(self):
        self.mock = Mock(username = "Toromax", userid = 34, url = "https://stackoverflow.com/questions/43120445/scraping-a-webpage-that-has-javascript-with-beautifulsoup")
+       self.orm = OrmFactory()
+       self.mock.usuario= Mock(username = "ronaldinio", biografia = 'hace mucho tiempo', comunidades = 'Github-push/pull', idusuario = 1010, linkusuario = 'https://yahoo.com')
+       self.mock.pregunta= Mock(idpregunta = 24, pregunta = "¿porque?", explicacion = 'no se', userid = 99, linkpregunta = 'https://yahoo.com')
        self.p = Usuario(self.mock.url, self.mock.username, self.mock.userid)
        self.m = Main
         #pruebas usuario
@@ -42,7 +45,7 @@ class PruebaWebScraper(unittest.TestCase):
    'Ask Ubuntu',
    'Super User',
    'Software Engineering'])'''
-   #pruebas StackEntryFeed
+    #pruebas StackEntryFeed
     @patch('StackEntryFeed.StackEntryFeed.get_title')
     def test_EntryLink(self, MockStack):
         stack = MockStack()
@@ -67,20 +70,9 @@ class PruebaWebScraper(unittest.TestCase):
         self.assertIsNotNone(response)
         self.assertIsInstance(response[0], dict)
         #pruebas orm
-    @patch('orm.OrmFactory.agregaUsuario')
     @patch('orm.OrmFactory.agregaRespuesta')
-    @patch('orm.OrmFactory.agregaPregunta')
-    def test_Orm(self, mockP, mockR, mockU):
-        pregunta = mockP()
+    def test_Orm(self, mockR):
         respuesta = mockR()
-        usuario = mockU()
-        pregunta.agregaPregunta.return_value = [{
-        'idpregunta': 50,
-        'pregunta': '¿Porque hacerlo asi y no como los demas?',
-        'explicacion': 'porque es más entendible',
-        'userid': 3,
-        'linkpregunta': 'https://stackoverflow.com/questions/89228/calling-an-external-command-in-python?rq=1'
-        }]
         respuesta.agragaRespuesta.return_value = [
         {
         'idpregunta': 4,
@@ -90,29 +82,16 @@ class PruebaWebScraper(unittest.TestCase):
         'linkrespuesta': 'https://stackoverflow.com/questions/89228/calling-an-external-command-in-python?rq=1'
         }
         ]
-        usuario.agregaUsuario.return_value = [{
-        'nombre': 'Juan',
-        'biografia': 'prefiere no hablar de eso',
-        'comunidades': 'Python3 ovarod',
-        'idUsuario': 99,
-        'linkusuario': 'https://stackoverflow.com/questions/89228/calling-an-external-command-in-python?rq=1'
-        }]
-        response = pregunta.agregaPregunta()
-        response2 = respuesta.agregaRespuesta()
-        response3 = usuario.agregaUsuario()
+        response = respuesta.agregaRespuesta()
         self.assertIsNotNone(response)
-        self.assertIsNotNone(response2)
-        self.assertIsNotNone(response3)
 
-    #integracion
-    #le damos una url correcta de stackoverflow y regresa None
+    def test_userorm(self):
+        self.assertIsNone(self.orm.agregaUsuario(self.mock.usuario.username, self.mock.usuario.biografia, self.mock.usuario.comunidades, self.mock.usuario.idusuario, self.mock.usuario.linkusuario))
+    def test_pregunta(self):
+        self.assertIsNone(self.orm.agregaPregunta(self.mock.pregunta.idpregunta, self.mock.pregunta.pregunta, self.mock.pregunta.explicacion, self.mock.pregunta.userid, self.mock.pregunta.linkpregunta))
+
     def testWS(self):
-     self.assertIsNone(self.m.main(self,"https://stackoverflow.com/questions/43120445/scraping-a-webpage-that-has-javascript-with-beautifulsoup"))
-
-    #nos arroja el error AttributeError si le metemos una url incorrecta
-    def test_URL_Incorrecta(self):
-        with self.assertRaises(AttributeError):
-            self.m.main(self, "https://www.metal-archives.com/label/country/c/JP")
+        self.assertIsNone(self.m.main(self,"https://stackoverflow.com/questions/43120445/scraping-a-webpage-that-has-javascript-with-beautifulsoup"))
 
 
 if __name__ == '__main__':
